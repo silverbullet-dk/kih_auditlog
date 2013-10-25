@@ -1,0 +1,10 @@
+/.link_to_grails_plugins
+/target
+/target-eclipse
+/.settings
+/*.iml
+/.idea
+/.project
+/.classpath
+/cobertura.ser
+/stacktrace.log
