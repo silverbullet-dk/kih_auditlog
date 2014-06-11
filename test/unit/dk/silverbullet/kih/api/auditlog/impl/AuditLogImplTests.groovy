@@ -12,6 +12,7 @@ import org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse
 import org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpSession
 import org.junit.Before
 import org.junit.Test
+import org.springframework.http.HttpHeaders
 
 @TestMixin(GrailsUnitTestMixin)
 @Mock([AuditLogEntry, AuditLogControllerEntity])
@@ -32,78 +33,58 @@ class AuditLogImplTests {
 
     @Test
     void testStartRequestAllValid() {
-        def id = auditLog.startRequest(session,request, user, controller,action)
+        def id = auditLog.startRequest(session, request, user, controller, action)
         assert id !=null
     }
 
     @Test
     void testStartRequestNullUser() {
         user = null
-        def id = auditLog.startRequest(session,request, user, controller,action)
+        def id = auditLog.startRequest(session, request, user, controller, action)
         assert id !=null
     }
 
     @Test
     void testStartRequestNullAction() {
         action = null
-        def id = auditLog.startRequest(session,request, user, controller,action)
+        def id = auditLog.startRequest(session, request, user, controller, action)
         assert id !=null
     }
 
     @Test
     void testStartRequestNullController() {
         controller = null
-        def id = auditLog.startRequest(session,request, user, controller,action)
+        def id = auditLog.startRequest(session, request, user, controller, action)
         assert id !=null
     }
 
+    @Test
+    void doesNotSetUserAgentIfNotPresentInRequest() {
+        long id = auditLog.startRequest(session, request, user, controller, action)
+        assert AuditLogEntry.get(id).userAgent == null
+    }
+
+    @Test
+    void savesUserAgentIfPresentInRequest() {
+        request.addHeader('User-Agent', 'This is just a test!')
+
+        long id = auditLog.startRequest(session, request, user, controller, action)
+        assert AuditLogEntry.get(id).userAgent == 'This is just a test!'
+    }
 
     @Test
     void testEndRequest() {
+        def id = auditLog.startRequest(session, request, user, controller, action)
 
-        def id = auditLog.startRequest(session,request, user, controller,action)
+        auditLog.endRequest(session, response, id, true, new HashMap())
 
+        id = auditLog.startRequest(session, request, user, controller,action)
+        auditLog.endRequest(session, response, id, false, null)
 
-        def testPassed = true
-        try {
-            auditLog.endRequest(session, response, id, true, new HashMap())
+        id = auditLog.startRequest(session, request, user, controller, action)
+        auditLog.endRequest(session, response, id, true, null)
 
-        } catch (AuditLogException e) {
-            fail("Caught exception")
-        }
-
-        assert testPassed == true
-
-        id = auditLog.startRequest(session,request, user, controller,action)
-        testPassed = true
-        try {
-            auditLog.endRequest(session, response, id, false, null)
-        } catch (AuditLogException e) {
-            fail("Caught exception")
-        }
-        assert testPassed == true
-
-        id = auditLog.startRequest(session,request, user, controller,action)
-        testPassed = true
-        try {
-            auditLog.endRequest(session, response, id, true, null)
-        } catch (AuditLogException e) {
-            fail("Caught exception")
-        }
-        assert testPassed == true
-
-        id = auditLog.startRequest(session,request, user, controller,action)
-        testPassed = true
-        try {
-            auditLog.endRequest(session, response, null, true, null)
-        } catch (AuditLogException e) {
-            fail("Caught exception")
-        }
-        assert testPassed == true
-
-
+        auditLog.startRequest(session, request, user, controller, action)
+        auditLog.endRequest(session, response, null, true, null)
     }
-
-
-
 }

@@ -30,6 +30,7 @@ class AuditLogEntry extends AbstractObject {
     String exceptionMessage
     String idCard
     String operation
+    String userAgent
 
 
     static constraints = {
@@ -55,6 +56,7 @@ class AuditLogEntry extends AbstractObject {
         callingIp(nullable: true)
         idCard(nullable: true)
         operation(nullable: true)
+        userAgent(nullable: true)
     }
 
     static mapping = {
@@ -66,6 +68,5 @@ class AuditLogEntry extends AbstractObject {
     @Override
     public String toString() {
         return """User: $authority - ($endTime - $startTime) -> : $duration"""
-
     }
 }

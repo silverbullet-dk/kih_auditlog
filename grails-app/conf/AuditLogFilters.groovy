@@ -31,9 +31,9 @@ class AuditLogFilters {
                 long start = System.currentTimeMillis()
                 long currentRequestNumber = REQUEST_NUMBER_COUNTER.incrementAndGet()
 
-                if (shouldAuditLog(grailsApplication, applicationContext, controllerName, actionName))
+                if (shouldAuditLog(grailsApplication, controllerName, actionName))
                 {
-                    def auditId = auditLog.startRequest(session, request,user, controllerName, actionName)
+                    def auditId = auditLog.startRequest(session, request, user, controllerName, actionName)
                     request[AUDIT_ID] = auditId
                 }
 
@@ -48,7 +48,7 @@ class AuditLogFilters {
 
             afterView = { Exception e ->
                 def user = SecurityContextHolder.context.authentication?.name
-                long currentRequestNumber = REQUEST_NUMBER_COUNTER.incrementAndGet()
+                REQUEST_NUMBER_COUNTER.incrementAndGet()
 
                 long start = request[START_TIME_ATTRIBUTE]
                 long end = System.currentTimeMillis()
@@ -64,11 +64,11 @@ class AuditLogFilters {
                         "action: $actionName"
                 if (e) {
                     log.debug "$msg \n\texception: $e.message", e
-                    if (shouldAuditLog(grailsApplication, applicationContext, controllerName, actionName)) {
+                    if (shouldAuditLog(grailsApplication, controllerName, actionName)) {
                         auditLog.endRequest(session, response, auditId, false, params, e)
                     }
                 } else {
-                    if (shouldAuditLog(grailsApplication, applicationContext, controllerName, actionName)) {
+                    if (shouldAuditLog(grailsApplication, controllerName, actionName)) {
                         auditLog.endRequest(session, response, auditId, true, params)
                     }
                     log.debug msg
@@ -77,7 +77,7 @@ class AuditLogFilters {
         }
     }
 
-    private boolean shouldAuditLog(GrailsApplication grailsApplication, ApplicationContext applicationContext, String controllerName, String actionName) {
+    private boolean shouldAuditLog(GrailsApplication grailsApplication, String controllerName, String actionName) {
         //NOTE: could probably be optimized a bit, see http://burtbeckwith.com/blog/?p=80
         def controllerClass = grailsApplication.controllerClasses.find {it.logicalPropertyName == controllerName}
         def skipController = controllerClass.clazz.getAnnotation(SkipAuditLog) != null

@@ -37,8 +37,8 @@ class AuditLogImpl implements AuditLog {
             AuditLogEntry entry = new AuditLogEntry(authority: (user? user: "unknown"), startTime: System.currentTimeMillis())
             entry.startDate = new Date(entry.startTime)
             entry.action = loggedController
-
             entry.callingIp = AuditLogUtil.extractIpFromRequest(request)
+            entry.userAgent = request.getHeader('User-Agent')
 
             if (!entry.save()) {
                 log.error "Errors: " + entry.errors
@@ -71,7 +71,6 @@ class AuditLogImpl implements AuditLog {
                 }
                 if (parameters) {
 
-                    def myParam = [:]
                     parameters.each() { k,v ->
                         String value = v.toString()
                         if (value.length() > 256 ) {
@@ -117,7 +116,7 @@ class AuditLogImpl implements AuditLog {
 
 
     @Override
-    void logServiceRequest(Long startTime, String cpr, String issuer, String idcard, String callingIP, String url, String operation) throws AuditLogException {
+    void logServiceRequest(Long startTime, String cpr, String issuer, String idcard, String callingIP, String url, String operation, String userAgent) throws AuditLogException {
         long endTime = System.currentTimeMillis()
         AuditLogEntry.withNewTransaction {
 
@@ -131,6 +130,7 @@ class AuditLogImpl implements AuditLog {
             a.idCard = idcard
             a.operation = operation
             a.callingIp = callingIP
+            a.userAgent = userAgent
 
             if (!a.save()) {
                 throw new AuditLogException("Could not store audit log")
