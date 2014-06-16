@@ -15,3 +15,7 @@ This generates a ZIP file. In projects depending on the KIH Auditlog plug-in, in
     grails install-plugin <path to the generated ZIP file>
 
 from the command line.
+
+Please note
+----------------------
+This repository is maintained exclusively by Silverbullet. The official version maintained by 4S can be found [here](https://bitbucket.org/4s/kih_auditlog).
