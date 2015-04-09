@@ -1,6 +1,6 @@
 package dk.silverbullet.kih.auditlog
 
-class AuditlogTaglibTagLib {
+class AuditlogTagLib {
 
     def auditLogLookupBean
 
@@ -22,6 +22,9 @@ class AuditlogTaglibTagLib {
             if (lookup.containsKey(action.controllerName)) {
                 if (lookup[action.controllerName].containsKey(action.actionName)) {
                     description = lookup[action.controllerName][action.actionName]
+                    if (description instanceof Closure) {
+                        description = description(g)
+                    }
                 }
             }
         }

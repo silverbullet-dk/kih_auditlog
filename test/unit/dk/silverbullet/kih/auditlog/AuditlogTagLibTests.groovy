@@ -7,25 +7,34 @@ import org.junit.Test
 /**
  * See the API for {@link grails.test.mixin.web.GroovyPageUnitTestMixin} for usage instructions
  */
-@TestFor(AuditlogTaglibTagLib)
-class AuditlogTaglibTagLibTests {
+@TestFor(AuditlogTagLib)
+class AuditlogTagLibTests {
 
 
     def specificTestString = "Overblik over test"
+    def specificTestClosure = { g -> "Opret ny side" }
 
     @Test
     void testLookup() {
 
         def lookup = [:]
-        lookup["test"] = ["index": specificTestString]
+        lookup["test"] = [
+                "index" : specificTestString,
+                "create" : specificTestClosure
+        ]
 
-        def taglib = new AuditlogTaglibTagLib()
+        def tagLib = new AuditlogTagLib()
 
         tagLib.auditLogLookupBean = new AuditLogLookup() {
 
             @Override
             Map retrieve() {
-                return ["test" : ["index" : specificTestString]]
+                return [
+                        "test" : [
+                                "index" : specificTestString,
+                                "create" : specificTestClosure
+                        ]
+                ]
             }
 
         }

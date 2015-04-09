@@ -2,7 +2,7 @@ package dk.silverbullet.kih.auditlog
 
 import dk.silverbullet.kih.api.auditlog.AuditLogPermissionName
 import dk.silverbullet.kih.api.auditlog.SkipAuditLog
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 @SkipAuditLog
 @Secured([AuditLogPermissionName.AUDITLOG_NONE])

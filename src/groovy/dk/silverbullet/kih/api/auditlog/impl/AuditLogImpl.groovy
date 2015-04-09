@@ -77,7 +77,7 @@ class AuditLogImpl implements AuditLog {
                             value = value.substring(0,255)
                         }
 
-                        AuditLogParameter p = new AuditLogParameter(key: k.toString(), value: value)
+                        AuditLogParameter p = new AuditLogParameter(parameterKey: k.toString(), parameterValue: value, entry: entry)
                         if (!p.save()) {
                             log.error "Errors: " + p.errors
                             throw new AuditLogException("Could not store parameters key: " + k.toString() + " value: " + v.toString())

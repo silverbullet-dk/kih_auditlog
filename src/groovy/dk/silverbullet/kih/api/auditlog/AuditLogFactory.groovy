@@ -1,9 +1,7 @@
 package dk.silverbullet.kih.api.auditlog
 
-import org.springframework.context.ApplicationContext
 import dk.silverbullet.kih.api.auditlog.impl.AuditLogImpl
 import org.slf4j.LoggerFactory
-import org.apache.commons.collections.bag.SynchronizedBag
 import org.slf4j.Logger
 
 class AuditLogFactory {

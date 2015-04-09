@@ -1,7 +1,8 @@
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
-
+grails.project.target.level = 1.7
+grails.project.source.level = 1.7
 
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
@@ -15,7 +16,7 @@ grails.project.dependency.resolution = {
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
         //mavenLocal()
-        //mavenCentral()
+        mavenCentral()
         //mavenRepo "http://snapshots.repository.codehaus.org"
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
@@ -32,22 +33,21 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build(":tomcat:$grailsVersion",
-              ":release:2.0.3",
-              ":rest-client-builder:1.0.2") {
+        build(":tomcat:8.0.15",
+              ":release:3.0.1",
+              ":rest-client-builder:2.0.3") {
             export = false
         }
-        runtime(":spring-security-core:1.2.7.2") {
+        runtime(":spring-security-core:2.0-RC4") {
             export = true
         }
 
-        runtime(":hibernate:$grailsVersion") {
+        runtime(":hibernate4:4.3.6.1") {
             export = false
         }
 
-
-        test(":code-coverage:1.2.5",
-                ":codenarc:0.17") {
+        test(":code-coverage:2.0.3-3",
+                ":codenarc:0.22") {
             export = false
         }
 
